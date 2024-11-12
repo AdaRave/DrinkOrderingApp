@@ -1,28 +1,38 @@
 package com.example.drinkorderingapp.ui.screen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.drinkorderingapp.R
+import com.example.drinkorderingapp.data.DescriptionProductData
+import com.example.drinkorderingapp.data.DescriptionProductState
+import com.example.drinkorderingapp.data.OrderData
+import com.example.drinkorderingapp.data.OrderState
+import com.example.drinkorderingapp.data.TitleProductData
+import com.example.drinkorderingapp.data.TitleProductState
+import com.example.drinkorderingapp.ui.screen.components.OrderActionBar
+import com.example.drinkorderingapp.ui.screen.components.ProductBackground
 import com.example.drinkorderingapp.ui.screen.components.ProductDescriptionSection
 import com.example.drinkorderingapp.ui.screen.components.ProductPreviewSection
-import com.example.drinkorderingapp.ui.theme.AppTheme
 
 @Composable
 fun ProductDetailScreen(
     modifier: Modifier = Modifier,
-    onBack: () -> Unit,
-    onLikeItem: () -> Unit
+    onReturnBack: () -> Unit,
+    onChooseFavorite: () -> Unit,
+    onAddItemClicked: () -> Unit,
+    onRemoveItemClicked: () -> Unit,
+    onAddProduct: () -> Unit,
+    titleProduct: TitleProductState = TitleProductData,
+    descriptionProduct: DescriptionProductState = DescriptionProductData,
+    state: OrderState
 ) {
     ProductBackground(
         modifier = Modifier
@@ -31,55 +41,33 @@ fun ProductDetailScreen(
     )
     Column {
         ProductPreviewSection(
-            onBack = onBack,
-            onLikeItem = onLikeItem,
+            onReturnBack = onReturnBack,
+            onChooseFavorite = onChooseFavorite,
             modifier = Modifier
                 .height(284.dp)
-                .statusBarsPadding()
+                .statusBarsPadding(),
+            titleProduct = titleProduct
         )
-        ProductDescriptionSection()
+        ProductDescriptionSection(
+            descriptionProduct = descriptionProduct,
+        )
     }
-
-}
-
-@Composable
-private fun ProductBackground(
-    modifier: Modifier = Modifier,
-) {
-
-    ConstraintLayout(modifier = modifier.fillMaxSize()) {
-        val (topImg, bottomImg, background) = createRefs()
-
-        Box(
+    Box(
+        modifier = Modifier.fillMaxHeight(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        OrderActionBar(
             modifier = modifier
-                .fillMaxSize()
-                .background(
-                    color = AppTheme.colors.secondarySurface
-                )
-                .constrainAs(background) {
-
-                }
-        )
-
-        Image(
-            painter = painterResource(id = R.drawable.circle),
-            contentDescription = "",
-            modifier = Modifier
-                .size(266.dp)
-                .constrainAs(topImg) {
-                    top.linkTo(anchor = parent.top)
-                    end.linkTo(anchor = parent.end, margin = (-70).dp)
-                }
-        )
-        Image(
-            painter = painterResource(id = R.drawable.cirlce2),
-            contentDescription = "",
-            modifier = Modifier
-                .size(241.dp)
-                .constrainAs(bottomImg) {
-                    top.linkTo(anchor = topImg.bottom, margin = (-70).dp)
-                    start.linkTo(anchor = parent.start, margin = (-80).dp)
-                }
+                .navigationBarsPadding(),
+            state = state,
+            onAddItemClicked = onAddItemClicked,
+            onRemoveItemClicked = onRemoveItemClicked,
+            onAddProduct = onAddProduct
         )
     }
+
 }
+
+
+
+
